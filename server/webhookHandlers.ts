@@ -7,9 +7,13 @@ const LIFTFLOW_API_BASE = "https://new-liftflow-for-render-hosting-backend.onren
 async function notifyLiftFlowPlanUpdate(email: string, tier: string, userCount: number, retryCount = 0): Promise<void> {
   const MAX_RETRIES = 2;
   try {
-    const response = await fetch(`${LIFTFLOW_API_BASE}/api/update-plan`, {
+    const webhookPaymentSecret = process.env.LIFTFLOW_WEBHOOK_SECRET;
+    const response = await fetch(`${LIFTFLOW_API_BASE}/api/webhooks/payment`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(webhookPaymentSecret ? { 'x-webhook-secret': webhookPaymentSecret } : {}),
+      },
       body: JSON.stringify({ email, tier, userCount }),
     });
 
