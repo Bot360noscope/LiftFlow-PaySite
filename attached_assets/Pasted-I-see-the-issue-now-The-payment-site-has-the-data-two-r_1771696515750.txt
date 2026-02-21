@@ -1,0 +1,33 @@
+I see the issue now. The payment site has the data (two records for your emails), but it's stored in the payment site's own database — not in LiftFlow's database. That's why the payment_users table here is empty.
+
+Let me check how the webhook is supposed to sync this data:
+
+Now I can see the full picture. There are two separate problems:
+
+The payment_users table is empty — The payment site stores payment data in its own database, not in LiftFlow's database. The profile sync on line 173 checks payment_users but finds nothing.
+
+The webhook approach works differently — The webhook (line 1089) doesn't use the payment_users table at all. It directly updates the profiles table. But it requires the user to already exist in the users table with a matching email.
+
+Let me check if those emails exist in the users table:
+
+Both accounts exist. Now let me check the profiles to see their current plan status:
+
+I found the bug! Here's what's happening:
+
+When someone pays on the payment site, it sends a webhook to LiftFlow which correctly updates the plan on the profile.
+But then, every time the app loads your profile, it checks the payment_users table (which is always empty), finds nothing, and resets your plan back to free.
+So the payment works momentarily, then gets undone the next time you open the app. The fix is to remove that reset logic — the webhook should be the only thing that controls your plan.
+
+Let me fix this:
+
+Now I'll fix it. The problem is lines 198-207 — when payment_users has no record, it resets the plan to free. I'll remove that entire payment_users sync block since the webhook is the correct way to update plans:
+
+Now let me also check if the paymentUsers import is still needed anywhere else, and restart the backend:
+
+The fix is in place. Here's what was happening:
+
+The bug: Every time the app loaded your profile, it checked a payment_users table that's always empty (the payment site uses its own separate database). When it found nothing there, it reset your plan back to free — undoing the successful webhook update.
+
+The fix: I removed that faulty check. Now the plan is only controlled by the payment webhook, which is the correct approach. When the payment site sends a webhook after a successful payment, it updates your plan, and it stays updated.
+
+What this means: Once you push this update to Render, payments should stick every time. The webhook from the payment site will set the plan, and it won't get wiped out anymore.
