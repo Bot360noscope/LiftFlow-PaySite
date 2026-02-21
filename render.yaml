@@ -3,11 +3,9 @@ services:
     name: liftflow-payments
     runtime: node
     plan: free
-    buildCommand: npm install --include=dev && npm run build && npm run db:push
-    startCommand: npm run start
+    buildCommand: NODE_ENV=development npm install && npm run build && npm run db:push
+    startCommand: NODE_ENV=production npm run start
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: DATABASE_URL
         sync: false
       - key: STRIPE_SECRET_KEY
