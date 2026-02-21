@@ -346,10 +346,10 @@ export default function Pricing() {
                             className="text-3xl font-extrabold"
                             data-testid={`text-plan-price-${plan.id}`}
                           >
-                            ${plan.annualPrice}
+                            ${plan.monthlyPrice}
                           </span>
                           <span className="text-muted-foreground text-sm ml-1">
-                            /client/year
+                            /client/mo
                           </span>
                         </>
                       ) : (
@@ -358,17 +358,17 @@ export default function Pricing() {
                             className="text-3xl font-extrabold"
                             data-testid={`text-plan-price-${plan.id}`}
                           >
-                            ${plan.annualPrice}
+                            ${plan.monthlyPrice}
                           </span>
                           <span className="text-muted-foreground text-sm ml-1">
-                            /year
+                            /mo
                           </span>
                         </>
                       )}
                     </div>
                     {!isFree && !isSaaS && plan.pricePerUser > 0 && (
                       <p className="text-xs text-muted-foreground mt-1">
-                        ${plan.pricePerUser}/client/year
+                        ${plan.pricePerUser}/client/mo
                       </p>
                     )}
                   </CardHeader>
@@ -431,7 +431,7 @@ export default function Pricing() {
                           className="text-xs text-center mt-2 text-primary font-medium"
                           data-testid="text-saas-total"
                         >
-                          Total: ${saasClientCount * plan.annualPrice}/year
+                          Total: ${saasClientCount * plan.monthlyPrice}/mo
                         </p>
                       </div>
                     )}

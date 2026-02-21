@@ -5,7 +5,7 @@ export interface PricingPlan {
   name: string;
   description: string;
   userCount: number;
-  annualPrice: number;
+  monthlyPrice: number;
   pricePerUser: number;
   stripePriceId: string;
   features: string[];
@@ -26,7 +26,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "Free",
     description: "Perfect for getting started",
     userCount: 1,
-    annualPrice: 0,
+    monthlyPrice: 0,
     pricePerUser: 0,
     stripePriceId: "",
     features: [
@@ -41,7 +41,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "Starter",
     description: "For small coaching practices",
     userCount: 5,
-    annualPrice: 25,
+    monthlyPrice: 25,
     pricePerUser: 5,
     stripePriceId: STRIPE_PRICE_IDS.tier_5,
     features: [
@@ -58,7 +58,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "Growth",
     description: "Scale your coaching business",
     userCount: 10,
-    annualPrice: 40,
+    monthlyPrice: 40,
     pricePerUser: 4,
     stripePriceId: STRIPE_PRICE_IDS.tier_10,
     features: [
@@ -74,7 +74,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "SaaS",
     description: "Unlimited clients, pay as you grow",
     userCount: 999,
-    annualPrice: 3,
+    monthlyPrice: 3,
     pricePerUser: 3,
     stripePriceId: STRIPE_PRICE_IDS.saas,
     isPerClient: true,
@@ -82,7 +82,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     features: [
       "15+ clients",
       "Everything in Growth",
-      "$3 per client per year",
+      "$3 per client per month",
       "Dedicated account manager",
       "API access",
       "Custom integrations",
