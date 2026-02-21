@@ -11,6 +11,7 @@ export interface PricingPlan {
   features: string[];
   popular?: boolean;
   isPerClient?: boolean;
+  minClients?: number;
 }
 
 export const STRIPE_PRICE_IDS: Record<string, string> = {
@@ -77,8 +78,9 @@ export const PRICING_PLANS: PricingPlan[] = [
     pricePerUser: 3,
     stripePriceId: STRIPE_PRICE_IDS.saas,
     isPerClient: true,
+    minClients: 15,
     features: [
-      "Unlimited clients",
+      "15+ clients",
       "Everything in Growth",
       "$3 per client per year",
       "Dedicated account manager",

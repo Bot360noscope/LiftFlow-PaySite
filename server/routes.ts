@@ -5,6 +5,8 @@ import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClie
 import { z } from "zod";
 import { STRIPE_PRICE_IDS } from "@shared/products";
 
+const LIFTFLOW_API_BASE = "https://new-liftflow-for-render-hosting-backend.onrender.com";
+
 const checkoutInputSchema = z.object({
   tier: z.enum(["tier_5", "tier_10", "saas"]),
   userCount: z.number().min(1),
@@ -26,6 +28,56 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/verify-account", async (req, res) => {
+    try {
+      const email = req.query.email as string;
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      const response = await fetch(
+        `${LIFTFLOW_API_BASE}/api/verify-account?email=${encodeURIComponent(email)}`
+      );
+      const data = await response.json();
+      res.json(data);
+    } catch (error: any) {
+      console.error("[Verify] Error verifying account:", error.message);
+      res.status(500).json({ error: "Unable to verify account at this time" });
+    }
+  });
+
+  app.post("/api/billing/downgrade-free", async (req, res) => {
+    try {
+      const { coachEmail } = req.body;
+      if (!coachEmail) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      const stripe = await getUncachableStripeClient();
+
+      const user = await storage.getUserByEmail(coachEmail);
+      if (!user || !user.stripeSubscriptionId) {
+        return res.json({ success: true, message: "You are already on the Free plan." });
+      }
+
+      try {
+        await stripe.subscriptions.update(user.stripeSubscriptionId, {
+          cancel_at_period_end: true,
+        });
+      } catch (err: any) {
+        console.log("Subscription cancel error (may already be cancelled):", err.message);
+      }
+
+      return res.json({
+        success: true,
+        message: "Your subscription will be cancelled at the end of the billing period. You'll be downgraded to the Free plan.",
+      });
+    } catch (error: any) {
+      console.error("[Billing] Downgrade error:", error);
+      res.status(500).json({ error: error.message || "Failed to downgrade" });
+    }
+  });
+
   app.post("/api/billing/checkout", async (req, res) => {
     try {
       const input = checkoutInputSchema.parse(req.body);
@@ -38,6 +90,10 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Invalid pricing tier or price not configured" });
       }
 
+      if (tier === "saas" && userCount < 15) {
+        return res.status(400).json({ error: "SaaS plan requires a minimum of 15 clients" });
+      }
+
       let user = await storage.getUserByEmail(coachEmail);
       if (!user) {
         user = await storage.createUser({ email: coachEmail, name: null });
@@ -47,6 +103,7 @@ export async function registerRoutes(
         try {
           const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
           if (subscription.status === "active" || subscription.status === "trialing") {
+            const quantity = tier === "saas" ? userCount : 1;
             const updatedSubscription = await stripe.subscriptions.update(
               user.stripeSubscriptionId,
               {
@@ -54,7 +111,7 @@ export async function registerRoutes(
                   {
                     id: subscription.items.data[0].id,
                     price: priceId,
-                    quantity: 1,
+                    quantity,
                   },
                 ],
                 proration_behavior: "create_prorations",
@@ -103,6 +160,7 @@ export async function registerRoutes(
       }
 
       const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const quantity = tier === "saas" ? userCount : 1;
 
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
@@ -112,7 +170,7 @@ export async function registerRoutes(
         line_items: [
           {
             price: priceId,
-            quantity: 1,
+            quantity,
           },
         ],
         subscription_data: {
