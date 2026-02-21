@@ -1,4 +1,4 @@
-export type PricingTier = "free" | "tier_5" | "tier_10" | "tier_25" | "enterprise";
+export type PricingTier = "free" | "tier_5" | "tier_10" | "saas";
 
 export interface PricingPlan {
   id: PricingTier;
@@ -10,13 +10,13 @@ export interface PricingPlan {
   stripePriceId: string;
   features: string[];
   popular?: boolean;
+  isPerClient?: boolean;
 }
 
 export const STRIPE_PRICE_IDS: Record<string, string> = {
-  tier_5: "price_1T36oMPEnFRXYYKj2AMO5eq9",
-  tier_10: "price_1T36oNPEnFRXYYKjQm3oRPcI",
-  tier_25: "price_1T36oNPEnFRXYYKjkGvsTJtW",
-  enterprise: "price_1T36oOPEnFRXYYKj1fYlN4yU",
+  tier_5: "price_1T36vQPEnFRXYYKjTF9txX85",
+  tier_10: "price_1T36vQPEnFRXYYKjlSwccVpP",
+  saas: "price_1T36vRPEnFRXYYKjkf27939t",
 };
 
 export const PRICING_PLANS: PricingPlan[] = [
@@ -40,8 +40,8 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "Starter",
     description: "For small coaching practices",
     userCount: 5,
-    annualPrice: 100,
-    pricePerUser: 20,
+    annualPrice: 25,
+    pricePerUser: 5,
     stripePriceId: STRIPE_PRICE_IDS.tier_5,
     features: [
       "5 clients included",
@@ -57,63 +57,37 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "Growth",
     description: "Scale your coaching business",
     userCount: 10,
-    annualPrice: 175,
-    pricePerUser: 17.5,
+    annualPrice: 40,
+    pricePerUser: 4,
     stripePriceId: STRIPE_PRICE_IDS.tier_10,
     features: [
       "10 clients included",
       "Everything in Starter",
       "Priority support",
       "Custom branding",
-      "Save 12.5% per user",
+      "Save 20% per client",
     ],
   },
   {
-    id: "tier_25",
-    name: "Professional",
-    description: "For established coaches",
-    userCount: 25,
-    annualPrice: 375,
-    pricePerUser: 15,
-    stripePriceId: STRIPE_PRICE_IDS.tier_25,
+    id: "saas",
+    name: "SaaS",
+    description: "Unlimited clients, pay as you grow",
+    userCount: 999,
+    annualPrice: 3,
+    pricePerUser: 3,
+    stripePriceId: STRIPE_PRICE_IDS.saas,
+    isPerClient: true,
     features: [
-      "25 clients included",
+      "Unlimited clients",
       "Everything in Growth",
+      "$3 per client per year",
       "Dedicated account manager",
       "API access",
-      "Save 25% per user",
-    ],
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    description: "For growing teams",
-    userCount: 999,
-    annualPrice: 500,
-    pricePerUser: 0,
-    stripePriceId: STRIPE_PRICE_IDS.enterprise,
-    features: [
-      "Unlimited users (25+)",
-      "Everything in Professional",
       "Custom integrations",
-      "SLA guarantee",
-      "White-label options",
     ],
   },
 ];
 
 export function getPricingPlan(tier: PricingTier): PricingPlan | undefined {
   return PRICING_PLANS.find((plan) => plan.id === tier);
-}
-
-export function calculateSavings(tier: PricingTier): number {
-  const plan = getPricingPlan(tier);
-  if (!plan || tier === "free" || tier === "enterprise") return 0;
-
-  const basePricePerUser = 20;
-  const actualPricePerUser = plan.pricePerUser;
-  const savingsPerUser = basePricePerUser - actualPricePerUser;
-  const percentSavings = (savingsPerUser / basePricePerUser) * 100;
-
-  return Math.round(percentSavings);
 }

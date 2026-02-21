@@ -6,7 +6,7 @@ import { z } from "zod";
 import { STRIPE_PRICE_IDS } from "@shared/products";
 
 const checkoutInputSchema = z.object({
-  tier: z.enum(["tier_5", "tier_10", "tier_25", "enterprise"]),
+  tier: z.enum(["tier_5", "tier_10", "saas"]),
   userCount: z.number().min(1),
   coachEmail: z.string().email(),
   userId: z.string().optional(),

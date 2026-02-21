@@ -6,32 +6,26 @@ async function setupFixedTierProducts() {
 
   const tiers = [
     {
-      name: "LiftFlow Starter (5 users)",
-      description: "Perfect for small coaching practices - 5 clients included",
-      price: 10000,
+      name: "LiftFlow Starter (5 clients)",
+      description: "For small coaching practices - 5 clients included",
+      price: 2500,
       users: 5,
       key: "tier_5",
     },
     {
-      name: "LiftFlow Growth (10 users)",
+      name: "LiftFlow Growth (10 clients)",
       description: "Scale your coaching business - 10 clients included",
-      price: 17500,
+      price: 4000,
       users: 10,
       key: "tier_10",
     },
     {
-      name: "LiftFlow Professional (25 users)",
-      description: "For established coaches - 25 clients included",
-      price: 37500,
-      users: 25,
-      key: "tier_25",
-    },
-    {
-      name: "LiftFlow Enterprise",
-      description: "Unlimited users for growing teams (25+)",
-      price: 50000,
+      name: "LiftFlow SaaS",
+      description: "Unlimited clients - $3 per client per year",
+      price: 300,
       users: 999,
-      key: "enterprise",
+      key: "saas",
+      isMetered: true,
     },
   ];
 
