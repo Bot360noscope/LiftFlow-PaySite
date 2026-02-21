@@ -1,0 +1,136 @@
+Skip to content
+Bot360noscope
+LiftFlow
+Repository navigation
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Owner avatar
+LiftFlow
+Public
+Bot360noscope/LiftFlow
+Go to file
+t
+Name		
+Bot360noscope
+Bot360noscope
+Fix payment plan reset bug
+aca5934
+ · 
+2 hours ago
+app
+Grey icons, remove client dashboard, bigger red borders
+5 hours ago
+assets/images
+Initial commit
+6 hours ago
+components
+Initial commit
+6 hours ago
+constants
+Initial commit
+6 hours ago
+lib
+Grey icons, remove client dashboard, bigger red borders
+5 hours ago
+patches
+Initial commit
+6 hours ago
+scripts
+Initial commit
+6 hours ago
+server
+Fix payment plan reset bug
+2 hours ago
+shared
+Initial commit
+6 hours ago
+.gitignore
+Initial commit
+6 hours ago
+app.json
+Initial commit
+6 hours ago
+babel.config.js
+Initial commit
+6 hours ago
+drizzle.config.ts
+Initial commit
+6 hours ago
+eslint.config.js
+Initial commit
+6 hours ago
+metro.config.js
+Initial commit
+6 hours ago
+package-lock.json
+Initial commit
+6 hours ago
+package.json
+Initial commit
+6 hours ago
+replit.md
+Initial commit
+6 hours ago
+tsconfig.json
+Initial commit
+6 hours ago
+Repository files navigation
+README
+Add a README
+Help people interested in this repository understand your project.
+
+About
+replit.com/@sambaayno/LiftFlow
+ Activity
+Stars
+ 0 stars
+Watchers
+ 0 watching
+Forks
+ 0 forks
+Releases
+No releases published
+Create a new release
+Packages
+No packages published
+Publish your first package
+Languages
+TypeScript
+92.8%
+ 
+JavaScript
+4.1%
+ 
+HTML
+3.1%
+Suggested workflows
+Based on your tech stack
+Webpack logo
+Webpack
+Build a NodeJS project with npm and webpack.
+SLSA Generic generator logo
+SLSA Generic generator
+Generate SLSA3 provenance for your existing release workflows
+Deno logo
+Deno
+Test your Deno project
+More workflows
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
