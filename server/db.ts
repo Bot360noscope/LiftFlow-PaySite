@@ -11,3 +11,21 @@ export const pool = new pg.Pool({
 });
 
 export const db = drizzle(pool, { schema });
+
+export async function ensureTables() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS payment_users (
+        id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+        email TEXT NOT NULL UNIQUE,
+        name TEXT,
+        stripe_customer_id TEXT,
+        stripe_subscription_id TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+    console.log("[db] payment_users table ready");
+  } catch (err: any) {
+    console.error("[db] Error ensuring tables:", err.message);
+  }
+}
