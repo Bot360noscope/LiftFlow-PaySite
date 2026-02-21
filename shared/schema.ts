@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -7,6 +7,8 @@ export const users = pgTable("payment_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: text("email").notNull().unique(),
   name: text("name"),
+  tier: text("tier"),
+  userCount: integer("user_count"),
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at").defaultNow(),

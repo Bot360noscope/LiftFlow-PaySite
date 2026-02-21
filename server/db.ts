@@ -19,11 +19,15 @@ export async function ensureTables() {
         id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
         email TEXT NOT NULL UNIQUE,
         name TEXT,
+        tier TEXT,
+        user_count INTEGER,
         stripe_customer_id TEXT,
         stripe_subscription_id TEXT,
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
+    await pool.query(`ALTER TABLE payment_users ADD COLUMN IF NOT EXISTS tier TEXT;`);
+    await pool.query(`ALTER TABLE payment_users ADD COLUMN IF NOT EXISTS user_count INTEGER;`);
     console.log("[db] payment_users table ready");
   } catch (err: any) {
     console.error("[db] Error ensuring tables:", err.message);

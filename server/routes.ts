@@ -220,11 +220,15 @@ export async function registerRoutes(
           const customerId = typeof session.customer === 'string'
             ? session.customer
             : session.customer?.id;
+          const tier = session.metadata?.tier || null;
+          const userCount = session.metadata?.userCount ? parseInt(session.metadata.userCount) : null;
           await storage.updateUserStripeInfo(user.id, {
             stripeSubscriptionId: subscriptionId,
             stripeCustomerId: customerId || undefined,
+            tier: tier || undefined,
+            userCount: userCount || undefined,
           });
-          console.log(`[Session] Saved subscription ${subscriptionId} for ${email}`);
+          console.log(`[Session] Saved subscription ${subscriptionId} (tier: ${tier}, users: ${userCount}) for ${email}`);
         }
       }
 

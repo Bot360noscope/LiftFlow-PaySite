@@ -25,9 +25,13 @@ export class WebhookHandlers {
             const customerId = typeof session.customer === 'string'
               ? session.customer
               : session.customer?.id;
+            const tier = session.metadata?.tier || null;
+            const userCount = session.metadata?.userCount ? parseInt(session.metadata.userCount) : null;
             await storage.updateUserStripeInfo(user.id, {
               stripeSubscriptionId: subscriptionId,
               stripeCustomerId: customerId || undefined,
+              tier: tier || undefined,
+              userCount: userCount || undefined,
             });
           }
         }
