@@ -2,8 +2,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
-import { runMigrations } from "stripe-replit-sync";
-import { getStripeSync } from "./stripeClient";
 import { WebhookHandlers } from "./webhookHandlers";
 
 const app = express();
@@ -18,37 +16,6 @@ export function log(message: string, source = "express") {
   });
   console.log(`${formattedTime} [${source}] ${message}`);
 }
-
-async function initStripe() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL required for Stripe integration");
-  }
-
-  try {
-    log("Initializing Stripe schema...", "stripe");
-    await runMigrations({ databaseUrl, schema: "stripe" });
-    log("Stripe schema ready", "stripe");
-
-    const stripeSync = await getStripeSync();
-
-    const webhookBaseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
-    const result = await stripeSync.findOrCreateManagedWebhook(
-      `${webhookBaseUrl}/api/stripe/webhook`
-    );
-    log(`Webhook configured: ${result?.webhook?.url || webhookBaseUrl}`, "stripe");
-
-    stripeSync
-      .syncBackfill()
-      .then(() => log("Stripe data synced", "stripe"))
-      .catch((err: any) => console.error("Error syncing Stripe data:", err));
-  } catch (error) {
-    console.error("Failed to initialize Stripe:", error);
-    throw error;
-  }
-}
-
-await initStripe();
 
 app.post(
   "/api/stripe/webhook",

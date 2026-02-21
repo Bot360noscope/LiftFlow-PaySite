@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: liftflow-payments
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build && npm run db:push
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
