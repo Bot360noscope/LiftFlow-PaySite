@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
+import { notifyLiftFlowPlanUpdate } from "./webhookHandlers";
 import { z } from "zod";
 import { STRIPE_PRICE_IDS } from "@shared/products";
 
@@ -68,6 +69,8 @@ export async function registerRoutes(
         console.log("Subscription cancel error (may already be cancelled):", err.message);
       }
 
+      await notifyLiftFlowPlanUpdate(coachEmail, 'free', 1);
+
       return res.json({
         success: true,
         message: "Your subscription will be cancelled at the end of the billing period. You'll be downgraded to the Free plan.",
@@ -123,6 +126,14 @@ export async function registerRoutes(
                 },
               }
             );
+
+            await storage.updateUserStripeInfo(user.id, {
+              tier,
+              userCount,
+            });
+            console.log(`[Checkout] Subscription updated for ${coachEmail}: tier=${tier}, userCount=${userCount}`);
+
+            await notifyLiftFlowPlanUpdate(coachEmail, tier, userCount);
 
             return res.json({
               url: "",
@@ -229,6 +240,10 @@ export async function registerRoutes(
             userCount: userCount || undefined,
           });
           console.log(`[Session] Saved subscription ${subscriptionId} (tier: ${tier}, users: ${userCount}) for ${email}`);
+
+          if (tier && userCount) {
+            await notifyLiftFlowPlanUpdate(email, tier, userCount);
+          }
         }
       }
 

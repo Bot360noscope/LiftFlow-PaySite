@@ -1,7 +1,7 @@
 # LiftFlow Payments
 
 ## Overview
-A focused payment/purchasing site for LiftFlow (fitness coaching platform) implementing a fixed-tier annual subscription pricing model with Stripe integration.
+A focused payment/purchasing site for LiftFlow (fitness coaching platform) implementing a fixed-tier monthly subscription pricing model with Stripe integration.
 
 ## Current State
 - **Working**: Pricing page with 3 paid tiers + free plan, Stripe Checkout integration, success/cancel pages
@@ -15,15 +15,16 @@ A focused payment/purchasing site for LiftFlow (fitness coaching platform) imple
 - **Database**: PostgreSQL (Neon) with Drizzle ORM
 - **Payments**: Stripe integration via Replit connector (`stripe-replit-sync`)
 - **Shared**: `shared/products.ts` defines all pricing tiers and Stripe price IDs
-- **External API**: `https://new-liftflow-for-render-hosting-backend.onrender.com/api/verify-account`
+- **External API**: `https://new-liftflow-for-render-hosting-backend.onrender.com/api/verify-account` and `/api/update-plan`
+- **Plan Sync**: Payment site actively notifies main LiftFlow server via POST `/api/update-plan` on every payment event (with retry logic)
 
-## Pricing Tiers (Annual Only)
-| Tier | Clients | Price/Year | Price ID |
-|------|---------|-----------|----------|
+## Pricing Tiers (Monthly)
+| Tier | Clients | Price/Mo | Price ID |
+|------|---------|----------|----------|
 | Free | 1 | $0 | N/A (downgrade cancels subscription) |
-| Starter | 5 | $25 | price_1T36vQPEnFRXYYKjTF9txX85 |
-| Growth | 10 | $40 | price_1T36vQPEnFRXYYKjlSwccVpP |
-| SaaS | 15+ | $3/client | price_1T36vRPEnFRXYYKjkf27939t |
+| Starter | 5 | $12.50 | price_1T36vQPEnFRXYYKjTF9txX85 |
+| Growth | 10 | $20 | price_1T36vQPEnFRXYYKjlSwccVpP |
+| SaaS | 15+ | $1.50/client | price_1T36vRPEnFRXYYKjkf27939t |
 
 ## Key Files
 - `shared/products.ts` - Pricing config and Stripe price IDs
@@ -52,8 +53,10 @@ A focused payment/purchasing site for LiftFlow (fitness coaching platform) imple
 - Free plan shows downgrade option (not "current plan")
 
 ## Recent Changes
+- 2026-02-21: Added active plan sync — payment site now calls main LiftFlow `/api/update-plan` on every payment event with retry
+- 2026-02-21: Pricing halved to Starter/$12.50, Growth/$20, SaaS/$1.50/client (monthly)
+- 2026-02-21: Switched from annual to monthly billing display
 - 2026-02-21: Dark theme with orange highlights from LiftFlow app colors.ts
-- 2026-02-21: Pricing updated to Free/$0, Starter/$25, Growth/$40, SaaS/$3-per-client (min 15)
 - 2026-02-21: Added account verification via main LiftFlow server before purchase
 - 2026-02-21: Added Free plan downgrade functionality
 - 2026-02-21: SaaS client count selector with min 15 enforcement
