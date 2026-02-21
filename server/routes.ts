@@ -209,10 +209,32 @@ export async function registerRoutes(
     try {
       const stripe = await getUncachableStripeClient();
       const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
+
+      if (session.subscription && session.customer_details?.email) {
+        const email = session.customer_details.email;
+        const user = await storage.getUserByEmail(email);
+        if (user && !user.stripeSubscriptionId) {
+          const subscriptionId = typeof session.subscription === 'string'
+            ? session.subscription
+            : session.subscription.id;
+          const customerId = typeof session.customer === 'string'
+            ? session.customer
+            : session.customer?.id;
+          await storage.updateUserStripeInfo(user.id, {
+            stripeSubscriptionId: subscriptionId,
+            stripeCustomerId: customerId || undefined,
+          });
+          console.log(`[Session] Saved subscription ${subscriptionId} for ${email}`);
+        }
+      }
+
       res.json({
         status: session.status,
         customerEmail: session.customer_details?.email,
         customerName: session.customer_details?.name,
+        subscriptionId: session.subscription,
+        tier: session.metadata?.tier,
+        userCount: session.metadata?.userCount,
       });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
