@@ -8,8 +8,6 @@ import { ensureTables } from "./db";
 const app = express();
 const httpServer = createServer(app);
 
-await ensureTables();
-
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -79,6 +77,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  await ensureTables();
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {

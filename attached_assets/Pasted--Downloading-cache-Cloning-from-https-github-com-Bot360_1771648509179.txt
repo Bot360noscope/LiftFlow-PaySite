@@ -1,0 +1,51 @@
+==> Downloading cache...
+==> Cloning from https://github.com/Bot360noscope/LiftFlow-PaySite
+==> Checking out commit c57d905aafefdb43e616d58abb169aa1d0162d23 in branch main
+==> Downloaded 203MB in 2s. Extraction took 4s.
+==> Using Node.js version 20.20.0 via /opt/render/project/src/.node-version
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'NPM_CONFIG_PRODUCTION=false npm install && npm run build && npm run db:push'...
+up to date, audited 485 packages in 1s
+76 packages are looking for funding
+  run `npm fund` for details
+Menu
+5 vulnerabilities (1 low, 1 moderate, 3 high)
+To address all issues, run:
+  npm audit fix
+Run `npm audit` for details.
+> rest-express@1.0.0 build
+> tsx script/build.ts
+building client...
+vite v7.3.1 building client environment for production...
+transforming...
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1668 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                   0.86 kB │ gzip:  0.46 kB
+../dist/public/assets/index-BKYIIBXa.css   70.78 kB │ gzip: 11.33 kB
+../dist/public/assets/index-B3LNI3Xr.js   275.84 kB │ gzip: 89.91 kB
+✓ built in 3.52s
+building server...
+✘ [ERROR] Top-level await is currently not supported with the "cjs" output format
+    server/index.ts:11:0:
+      11 │ await ensureTables();
+         ╵ ~~~~~
+1 error
+Error: Build failed with 1 error:
+server/index.ts:11:0: ERROR: Top-level await is currently not supported with the "cjs" output format
+    at failureErrorWithLog (/opt/render/project/src/node_modules/esbuild/lib/main.js:1467:15)
+    at /opt/render/project/src/node_modules/esbuild/lib/main.js:926:25
+    at /opt/render/project/src/node_modules/esbuild/lib/main.js:878:52
+    at buildResponseToResult (/opt/render/project/src/node_modules/esbuild/lib/main.js:924:7)
+    at /opt/render/project/src/node_modules/esbuild/lib/main.js:951:16
+    at responseCallbacks.<computed> (/opt/render/project/src/node_modules/esbuild/lib/main.js:603:9)
+    at handleIncomingPacket (/opt/render/project/src/node_modules/esbuild/lib/main.js:658:12)
+    at Socket.readFromStdout (/opt/render/project/src/node_modules/esbuild/lib/main.js:581:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+==> Build failed 😞
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
