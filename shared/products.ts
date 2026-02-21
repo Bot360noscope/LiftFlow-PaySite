@@ -15,9 +15,9 @@ export interface PricingPlan {
 }
 
 export const STRIPE_PRICE_IDS: Record<string, string> = {
-  tier_5: "price_1T36vQPEnFRXYYKjTF9txX85",
-  tier_10: "price_1T36vQPEnFRXYYKjlSwccVpP",
-  saas: "price_1T36vRPEnFRXYYKjkf27939t",
+  tier_5: "price_1T38iWKCB3HAqoHmIt3jebql",
+  tier_10: "price_1T38iqKCB3HAqoHmkejOnHaB",
+  saas: "price_1T38kVKCB3HAqoHmbrvBeuew",
 };
 
 export const PRICING_PLANS: PricingPlan[] = [
