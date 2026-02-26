@@ -72,7 +72,7 @@ export const PRICING_PLANS: PricingPlan[] = [
   {
     id: "saas",
     name: "SaaS",
-    description: "Unlimited clients, pay as you grow",
+    description: "$1.50 for clients over 15",
     userCount: 999,
     monthlyPrice: 1.5,
     pricePerUser: 1.5,
@@ -80,9 +80,8 @@ export const PRICING_PLANS: PricingPlan[] = [
     isPerClient: true,
     minClients: 15,
     features: [
-      "15+ clients",
+      "$1.50 per client over 15",
       "Everything in Growth",
-      "$1.50 per client per month",
       "Dedicated account manager",
       "API access",
       "Custom integrations",
