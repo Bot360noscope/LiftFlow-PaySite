@@ -149,8 +149,18 @@ export async function registerRoutes(
 
       let customer: any;
       if (user.stripeCustomerId) {
-        customer = { id: user.stripeCustomerId };
-      } else {
+        try {
+          customer = await stripe.customers.retrieve(user.stripeCustomerId);
+          if ((customer as any).deleted) {
+            customer = null;
+          }
+        } catch (custError: any) {
+          console.log(`[Checkout] Stored customer ${user.stripeCustomerId} not found in Stripe, creating new: ${custError.message}`);
+          customer = null;
+        }
+      }
+
+      if (!customer) {
         const existingCustomers = await stripe.customers.list({
           email: coachEmail,
           limit: 1,
